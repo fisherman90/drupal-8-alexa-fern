@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <meta name="description" content="Talk to me, Drupal! Wie einfach eine Alexa-Anbindung sein kann.">
+    <meta name="author" content="Peter Gerken">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <title>Talk to me, Drupal!</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/moon.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <small style="position: absolute; left: 1em; bottom: 1em;">
+        @F90er
+    </small>
+    <small style="position: absolute; left: 5em; bottom: 1em;">
+        Talk to me, Drupal!
+    </small>
+    <div class="slides">
+        <section data-background="images/ef-logo-freigestellt.png">
+            <h1>Talk to me, Drupal!</h1>
+            <!-- <img src="images/druploisius-small.png"> -->
+            <h3>Wie einfach eine Alexa-Anbindung sein kann</h3>
+            <p style="color:white;">
+                Peter Gerken
+            </p>
+        </section>
+        <section>
+            <h3>Peter Gerken</h3>
+            Drupal Developer bei <a target="_blank"href="https://erdfisch.de/">erdfisch</a> in Heidelberg, Germany
+            </br>
+            Zu finden unter <a target="_blank"href="https://www.drupal.org/u/fisherman90">fisherman90</a> auf Drupal.org & Github
+            </br>
+            <a target="_blank"href="https://twitter.com/F90er">@F90er</a> auf Twitter
+            </br>
+            <img src="images/peter.jpg" height="200px">
+        </section>
+        <section>
+            <!-- Drupal Developers at <a target="_blank"href="https://erdfisch.de/">erdfisch</a> in Heidelberg, Germany -->
+            <!-- <br> -->
+            <img src="images/erdfisch.png">
+        </section>
+        <section>
+            <img src="images/alexa-meme.jpg">
+        </section>
+        <section>
+            <img src="images/southpark-animated.gif" style="width:80%">
+        </section>
+        <section>
+            <h3>Worum geht's?</h3>
+            <ol>
+                <li class="fragment">Grundlagen: Konzept hinter Clound-Basierten Sprachdiensten</li>
+                <li class="fragment">Vorraussetzungen / Tools</li>
+                <li class="fragment">Erste Schritte</li>
+                <li class="fragment">Konfigurierung des Skills bei Amazon</li>
+                <li class="fragment">Testlauf</li>
+                <li class="fragment">Beispiel mit Entities</li>
+                <li class="fragment">Hinweise</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Grundlagen</h2>
+
+            <section>
+
+                <img src="images/schema.png" style="max-width: 80%;">
+                <small>Bild: https://www.linkedin.com/pulse/amazon-alex-building-custom-skill-aniruddha-chakrabarti
+                </small>
+            </section>
+            <section>
+                <img src="images/170606-apple-homepod-google-home-amazon-echo.jpg" style="max-width: 65%;">
+                <small>Bild: http://time.com/money/4807525/apple-homepod-amazon-echo-comparison-how-to-buy/</small>
+            </section>
+            <section>
+                <img src="images/schema-drupal.png" style="max-width: 80%;">
+                <small>Bild: https://www.linkedin.com/pulse/amazon-alex-building-custom-skill-aniruddha-chakrabarti
+                </small>
+            </section>
+        </section>
+
+        <section>
+            <h2>Vorraussetzungen / Tools</h2>
+            <section>
+                <ol>
+                    <li class="fragment">Lokales Drupal 8 Setup (Composer)</li>
+                    <li class="fragment">Alexa Contrib-Modul</li>
+                    <li class="fragment">Echo-kompatibles Gerät</li>
+                    <li class="fragment">Apache / nginx auf Port X (nicht 80)</li>
+                    <li class="fragment">ngrok (https-Tunnel)</li>
+                    <li class="fragment">Beliebige IDE / Texteditor (z.B. PhpStorm)</li>
+                </ol>
+            </section>
+            <section>
+                <h3>Lokales Drupal 8 Setup (Composer)</h3>
+               <!-- <img src="images/composer.png" style="width: 100%;">-->
+                <pre>
+<code>$ composer create-project
+    drupal-composer/drupal-project:8.x-dev some-dir
+    --stability dev --no-interaction
+</code>
+                </pre>
+            </section>
+            <section>
+
+                <img src="images/alexa-contrib.png" style="max-width: 60%;">
+                <small>Drupal-Integration für <span style="color:white">jakubsuchy/amazon-alexa-php</span>, <br>eine PHP-Library für Alexa-Anbindungen.</small>
+            </section>
+            <section>
+                <h3>drupal/alexa Contrib-Modul</h3>
+                <!--<img src="images/composer-alexa.png" style="width: 80%;">-->
+                <pre style="max-width: 50%;">
+<code>$ composer require drupal/alexa
+</code>
+                </pre>
+                <small>Installiert automatisch auch <span style="color:white">jakubsuchy/amazon-alexa-php</span>
+                </small>
+
+            </section>
+            <section>
+                <h3>Echo-Kompatibles Gerät</h3>
+                <img src="images/amazon-alexa-family.jpg" style="max-width: 60%;"><br>
+                <small>Bild: Amazon</small>
+            </section>
+            <section>
+                <h3>nginx auf Port X (nicht 80)</h3>
+                <!--<img src="images/nginx.png" style="width: 60%;">-->
+<pre style="max-width: 50%;">
+<code>server {
+    listen 3000;
+    server_name alexa-endpoint.dev;
+
+    ...
+</code></pre>
+                <small>Als Beispiel Port 3000</small>
+            </section>
+
+            <section>
+                <h3>apache auf Port X (nicht 80)</h3>
+                <p>
+                    <small>In /etc/apache2/ports.conf:</small>
+                </p>
+                <!--<img src="images/nginx.png" style="width: 60%;">-->
+<pre style="max-width: 50%;">
+<code>listen 3000
+</code></pre>
+<p>&nbsp;</p>
+                <p>
+                    <small>In z.B. /etc/httpd/conf.d/vhost.conf:</small>
+                </p>
+                <img src="images/apache.png" style="width: 60%;">
+
+            </section>
+
+            <section>
+                <h3>ngrok</h3>
+                <img src="images/ngrok.png" style="max-width: 60%;"><br>
+                <small><a target="_blank"href="https://ngrok.com/">https://ngrok.com/</a></small>
+            </section>
+
+            <section>
+                <h3>ngrok Installation</h3>
+                <img src="images/ngrok-download.png" style="max-width: 35%;"><br>
+                <small><a target="_blank"href="https://ngrok.com/download">https://ngrok.com/download</a></small>
+            </section>
+
+            <section>
+                <h3>ngrok Installation (Mac)</h3>
+                <img src="images/ngrok-homebrew.png" style="max-width: 80%;">
+            </section>
+
+        </section>
+
+        <section>
+            <h2>Erste Schritte</h2>
+            <section>
+                <ul>
+                    <li>Alexa Demo-Modul kopieren</li>
+                    <li class="fragment">Namen des Moduls anpassen</li>
+                    <li class="fragment">Modul aktivieren</li>
+                </ul>
+            </section>
+
+            <section>
+                <img src="images/demo-location.png" style="max-width: 50%;">
+            </section>
+
+        </section>
+
+        <section>
+            <h2>Konfigurierung des Skills</h2>
+            <section>
+                <p>
+                    <a target="_blank"href="https://developer.amazon.com/edw/home.html#/skill/create/">https://developer.amazon.com/edw/home.html#/skill/create/</a>
+                </p>
+            </section>
+
+        </section>
+
+        <section>
+            <h2>Testlauf</h2>
+        </section>
+
+        <section>
+            <img src="images/excited.gif" style="width:80%">
+        </section>
+
+        <section>
+            <h2>Beispiel mit Entities</h2>
+        </section>
+
+        <section>
+            <img src="images/dancing.gif" style="width:80%">
+        </section>
+
+        <section>
+            <h2>Hinweise</h2>
+
+            <ol>
+                <li class="fragment">Skill-Builder ist noch Beta</li>
+                <li class="fragment">Unzureichende Debugging-Tools (Dialoge)</li>
+                <li class="fragment">jakubsuchy/amazon-alexa-php kennt die neuen <a target="_blank"href="https://developer.amazon.com/de/docs/custom-skills/dialog-interface-reference.html#directives">Dialog-Direktiven</a> von Amazon noch nicht.</li>
+                <li class="fragment">Anleitung des Modulentwicklers: <a target="_blank"href="https://www.drupal.org/node/2701403">https://www.drupal.org/node/2701403</a></li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Fragen?</h2>
+        </section>
+
+        <section>
+            <img src="images/southpark.jpg">
+        </section>
+
+        <section>
+            <h2>Danke!</h2>
+            <img src="images/alexa-loves-drupal.png">
+            <p>
+                Peter Gerken, Frontend-Dev @erdfisch<br>
+                Twitter: @F90er
+            </p>
+        </section>
+
+
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  // More info about config & dependencies:
+  // - https://github.com/hakimel/reveal.js#configuration
+  // - https://github.com/hakimel/reveal.js#dependencies
+  Reveal.initialize({
+    dependencies: [
+      {src: 'plugin/markdown/marked.js'},
+      {src: 'plugin/markdown/markdown.js'},
+      {src: 'plugin/notes/notes.js', async: true},
+      {
+        src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+        hljs.initHighlightingOnLoad();
+      }
+      }
+    ]
+  });
+
+    // If user is on first slide, force change to desired slide
+    //setTimeout(function() {Reveal.slide(7,1)}, 400);
+
+</script>
+</body>
+</html>
